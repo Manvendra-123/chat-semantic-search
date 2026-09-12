@@ -1,6 +1,25 @@
-# Semantic Chat Search: 
+# Semantic Chat Search
 
 This repository contains a submission for the IT Geeks assessment (Problem #2 "Search a Group Chat Properly"). The brief requires searching a synthetic Hinglish group chat (4,000+ messages, 8 participants, 6 months) and retrieving the correct message for 40 queries, including 8 queries with zero word overlap with the answer.
+
+## Layout
+
+```
+chatsearch/          retrieval pipeline, corpus builder, eval, demo server
+static/              local demo UI
+data/                generated corpus, queries, seed transcripts
+```
+
+| Path | Role |
+|---|---|
+| `chatsearch/build_corpus.py` | Build the 4,000+ message archive and 40 labeled queries |
+| `chatsearch/index.py` | Windowed TF-IDF + LSI index |
+| `chatsearch/retrieve.py` | Hybrid / keyword search |
+| `chatsearch/queryparse.py` | Meaning / person / time intents |
+| `chatsearch/eval.py` | Hit@1 / Hit@3 / MRR on all 40 and the hard 8 |
+| `chatsearch/serve.py` | Local demo at `http://127.0.0.1:8000` |
+| `chatsearch/bank.py` | Hand-authored Hinglish filler |
+| `data/raw_1.jsonl`, `data/raw_2.jsonl` | Seed transcript used by the corpus builder |
 
 ## The Honest Result
 
@@ -66,16 +85,18 @@ Per the brief, the corpus is entirely synthetic. No real chat data is used, no e
 
 ## How to Run
 
-1. Clone the repository cleanly.
-2. Ensure you are using **Python 3.12**.
+1. Clone the repository.
+2. Use **Python 3.12**.
 3. Create and activate a virtual environment, then install dependencies:
 ```bash
 python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
-4. Generate the dataset and run the evaluation:
+4. Generate the dataset, evaluate, and open the demo:
 ```bash
-PYTHONPATH=. python chatsearch/build_corpus.py
-PYTHONPATH=. python chatsearch/eval.py
+PYTHONPATH=. python -m chatsearch.build_corpus
+PYTHONPATH=. python -m chatsearch.eval
+PYTHONPATH=. python -m chatsearch.serve
 ```
+The demo is at `http://127.0.0.1:8000`. Optional: `PYTHONPATH=. python -m chatsearch.validate` checks corpus constraints.

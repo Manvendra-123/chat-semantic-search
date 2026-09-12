@@ -1,5 +1,7 @@
 .venv/
 venv/
+venv2/
+venv312/
 __pycache__/
 *.pyc
 .pytest_cache/
@@ -11,9 +13,7 @@ dist/
 build/
 .mypy_cache/
 .ruff_cache/
+.cache/
 data/index.npz
 data/index_meta.json
-.cache/
-venv2/
-venv312/
 data/eval_results.json

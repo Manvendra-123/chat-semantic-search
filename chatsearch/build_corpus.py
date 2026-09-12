@@ -132,7 +132,7 @@ class CorpusBuilder:
             self.emit(sender, body, kind=kind, tag=tag_on.get(i), minutes=self.rng.choice([1, 1, 2, 3, 12]))
 
     def get_filler_text(self) -> str:
-        from bank import BANK
+        from chatsearch.bank import BANK
         for _ in range(20):  # retry to avoid warmup gold duplicates
             text = self.rng.choice(BANK)
             if text not in WARMUP_GOLDS or text not in self.emitted_golds:

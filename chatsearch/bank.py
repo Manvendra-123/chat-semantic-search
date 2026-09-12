@@ -1,3 +1,5 @@
+"""Hand-authored Hinglish filler lines used when assembling the synthetic corpus."""
+
 BANK = [
     "bhai Rohit ko bolna ki aaj tak aa jaye.",
     "bhai Sneha ko bolna ki aaj tak aa jaye.",

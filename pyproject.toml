@@ -19,6 +19,12 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8.0.0"]
 
+[project.scripts]
+chatsearch-corpus = "chatsearch.build_corpus:main"
+chatsearch-eval = "chatsearch.eval:evaluate"
+chatsearch-serve = "chatsearch.serve:main"
+chatsearch-validate = "chatsearch.validate:main"
+
 [tool.setuptools]
 packages = ["chatsearch"]
 
