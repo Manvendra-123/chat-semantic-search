@@ -44,14 +44,14 @@ The stated result of this project is the gap between the warmup queries (where k
 
 The following findings came from actual measurement and ablation, not guesswork.
 
-**1. Corpus was 83% duplicate**
-An early version of the synthetic corpus contained 4,120 messages but only 698 distinct strings. As a result, every query had roughly eight identical correct answers spread throughout the timeline, making evaluation meaningless.
+**1. Historical issue: corpus was 83% duplicate**
+An early version of the synthetic corpus contained 4,120 messages but only 698 distinct strings. As a result, every query had roughly eight identical correct answers spread throughout the timeline, making evaluation meaningless. This problem was fixed in the current corpus: it contains 4,104 messages and passes the validator's 95% substantive-line uniqueness threshold, with 97.1% measured uniqueness.
 
 **2. Intra-window tie-break bug**
 Retrieval is window-based, but returning a naked message from within a window was initially arbitrary. Adding intra-window scoring moved warmup hit@1 from **0.28 → 0.656**, while the hard-8 stayed completely flat at **0.125** (measured before the lexicon concept table was removed — see Finding 5). This flatness was the evidence that the tie-break fix leaked nothing: it breaks ties on term overlap, and genuinely zero-overlap queries have no terms to break on.
 
-**3. Unique ≠ meaningful**
-After fixing the duplicates, the corpus passed a 97.1% uniqueness check but was effectively useless "slot-salad" generated from 13 templates (e.g., "aaj parking me garmi bahot h", "CR cancel kar diya parking next week"). With no meaningful semantics to retrieve, all channels scored near zero. Replacing this with a bank of 406 hand-written Hinglish sentences moved warmup hit@1 from **0.125 → 0.781** (measured before the lexicon concept table was removed — see Finding 5). The corpus validator was updated to recognize that uniqueness does not imply semantic value.
+**3. Historical issue: unique does not always mean meaningful**
+After fixing duplicates, an intermediate corpus passed a 97.1% uniqueness check but was still effectively useless "slot-salad" generated from 13 templates. Replacing that filler with a bank of 406 hand-written Hinglish sentences improved warmup retrieval substantially. The current corpus keeps that hand-authored filler bank and the validator also checks corpus size, participants, chronology, and hard-query overlap. Uniqueness alone does not guarantee semantic value.
 
 **4. Two multilingual models fail on romanized Hinglish**
 We tested two off-the-shelf embedding models on a 5-candidate ranking task (Query: "When did we lock the hill station?", Gold: "chalo manali fix h 14 ko nikalte h", Distractor: "aaj parking me garmi bahot h").
