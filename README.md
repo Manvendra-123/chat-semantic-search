@@ -84,15 +84,31 @@ Per the brief, the corpus is entirely synthetic. No real chat data is used, no e
 ## How to Run
 
 1. Clone the repository cleanly.
-2. Ensure you are using **Python 3.12**.
-3. Create and activate a virtual environment, then install dependencies:
+2. Ensure you are using **Python 3.12 or newer**.
+3. Create and activate the ignored project environment, then install dependencies:
 ```bash
-python3.12 -m venv venv
-source venv/bin/activate
+python3.12 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
-4. Generate the dataset and run the evaluation:
+4. Regenerate and validate the synthetic corpus:
 ```bash
 PYTHONPATH=. python chatsearch/build_corpus.py
+PYTHONPATH=. python chatsearch/validate.py
+```
+
+The repository already includes the generated corpus under `data/`, so this step
+can be skipped when you only want to run the existing data.
+
+5. Run the evaluation:
+```bash
 PYTHONPATH=. python chatsearch/eval.py
 ```
+
+6. Start the local web server:
+```bash
+python -m chatsearch.serve
+```
+
+Open <http://127.0.0.1:8000> in a browser. The first search builds the in-memory
+index and may take a few seconds. Stop the server with `Ctrl+C`.
