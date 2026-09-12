@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search a Group Chat Properly</title>
+  <meta name="description" content="A semantic search engine over a messy Hinglish group chat">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="background-glow"></div>
+  
+  <div class="container">
+    <header class="header">
+      <h1>Semantic Chat Search</h1>
+      <p>Find the right message even when you don't remember the exact words.</p>
+    </header>
+
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="e.g. 'When did we decide on Manali?'" autocomplete="off" />
+        <button id="searchBtn" aria-label="Search">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+      </div>
+      <div class="examples" id="examplesContainer">
+        <!-- Examples will be injected here -->
+      </div>
+    </div>
+
+    <main class="main-content">
+      <div class="loading" id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+      </div>
+      
+      <div id="resultsContainer" class="results-container">
+        <!-- Results will be injected here -->
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
