@@ -115,7 +115,7 @@ def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[
     lsi_top = _top_ids(lsi_s * person_boost * time_boost * concept_boost, 80)
     fused_top = _top_ids(fused, 80)
     rrf = _rrf([word_top, lsi_top, fused_top])
-    ranked = sorted(rrf, key=lambda pid: rrf[pid], reverse=True)
+    ranked = _top_ids(fused, len(fused))
 
     hits: list[Hit] = []
     seen_centers: set[int] = set()
