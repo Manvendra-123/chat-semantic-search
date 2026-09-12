@@ -17,8 +17,7 @@ from chatsearch.queryparse import ParsedQuery, parse_query
 from chatsearch.textutil import tokenize
 
 DECISION_HINTS = {
-    "lock", "fix", "fixed", "pakka", "final", "done", "confirm", "450",
-    "handle", "core", "volvo", "snowview", "makeup", "form", "18",
+    "lock", "fix", "fixed", "pakka", "final", "done", "confirm", "decided", "settled"
 }
 
 
@@ -134,6 +133,17 @@ def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[
         if "concept:" in p.expanded and any(t.startswith("concept:") for t in expand_tokens(parsed.tokens)):
             why.append("meaning:concept-overlap")
         why.append("hybrid:tfidf+lsi+rrf")
+        best_msg_id = p.center_id
+        best_score = 0.0
+
+        for j in range(p.start_idx, p.end_idx):
+            m = index.messages[j]
+            msg_v = index.word_vec.transform([m["text"]])
+            score = (msg_v @ qv["word"].T).toarray()[0, 0]
+            if score > best_score:
+                best_score = score
+                best_msg_id = m["id"]
+
         ctx = []
         for j in range(p.start_idx, p.end_idx):
             m = index.messages[j]
@@ -144,16 +154,17 @@ def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[
                     "ts": m["ts"],
                     "text": m["text"],
                     "kind": m["kind"],
-                    "is_hit": m["id"] == p.center_id,
+                    "is_hit": m["id"] == best_msg_id,
                 }
             )
+        best_msg = index.messages[index.id_to_idx[best_msg_id]]
         hits.append(
             Hit(
-                message_id=p.center_id,
+                message_id=best_msg_id,
                 score=float(rrf[pid]),
-                sender=p.sender,
-                ts=p.ts,
-                text=index.messages[index.id_to_idx[p.center_id]]["text"],
+                sender=best_msg["sender"],
+                ts=best_msg["ts"],
+                text=best_msg["text"],
                 why=why,
                 context=ctx,
             )
