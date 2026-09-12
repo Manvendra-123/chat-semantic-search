@@ -1,4 +1,4 @@
-# Semantic Chat Search: IT Geeks Submission
+# Semantic Chat Search: 
 
 This repository contains a submission for the IT Geeks assessment (Problem #2 "Search a Group Chat Properly"). The brief requires searching a synthetic Hinglish group chat (4,000+ messages, 8 participants, 6 months) and retrieving the correct message for 40 queries, including 8 queries with zero word overlap with the answer.
 
