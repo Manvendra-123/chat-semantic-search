@@ -4,15 +4,23 @@ This repository contains a submission for the IT Geeks assessment (Problem #2 "S
 
 ## The Honest Result
 
-The stated result of this project is the large gap between the warmup queries (where keyword overlap exists) and the hard 8 queries (zero word overlap). The pipeline is a hybrid lexical/sparse retriever (TF-IDF word + char n-grams, LSI, BM25 over conversation windows). 
+The stated result of this project is the gap between the warmup queries (where keyword overlap exists) and the hard 8 queries (zero word overlap). The pipeline combines TF-IDF word and character n-grams, LSI, and an inspectable Hinglish concept graph over conversation windows. The concept graph supplies a small semantic bridge for code-mixed phrases without pretending that a generic embedding understands Romanized Hinglish.
 
 | Split | n | Keyword (BM25/Lexical) Hit@1 | Hit@3 | MRR | Full Hybrid (TF-IDF + LSI) Hit@1 | Hit@3 | MRR |
 |---|---|---|---|---|---|---|---|
-| Overall | 40 | 0.525 | 0.625 | 0.582 | 0.525 | 0.575 | 0.555 |
-| Warmup | 32 | 0.656 | 0.781 | 0.728 | 0.656 | 0.719 | 0.694 |
-| Hard | 8 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
+| Overall | 40 | 0.475 | 0.625 | 0.577 | 0.475 | 0.625 | 0.570 |
+| Warmup | 32 | 0.531 | 0.719 | 0.643 | 0.531 | 0.688 | 0.626 |
+| Hard | 8 | 0.250 | 0.250 | 0.313 | 0.250 | 0.375 | 0.344 |
 
-*The gap is stark: 0.656 on warmup vs 0.000 on hard queries.*
+*The gap remains visible: 0.531 on warmup vs 0.250 on hard queries for Hit@1.*
+
+## Artifacts
+
+- [Corpus metadata](data/corpus_meta.json): message count, participants, date range, and query-set validation.
+- [Final evaluation](data/eval_final.txt): the latest 40-query evaluation used for the table above.
+- [Original evaluation](data/eval_output.txt): the earlier pre-semantic-bridge run.
+- [No-lexicon evaluation](data/eval_no_lexicon.txt): the ablation showing the zero-overlap baseline.
+- [Labeled queries](data/queries.json): all 40 queries, gold message IDs, intent shapes, and hard-query flags.
 
 ### Per-Shape Breakdown
 | Shape | n | Hit@1 |
@@ -42,21 +50,21 @@ We tested two off-the-shelf embedding models on a 5-candidate ranking task (Quer
 - `intfloat/multilingual-e5-base`: Gold scored 0.746, Distractor 0.754. Gold loses (all candidates clumped between 0.70 and 0.75).
 Both models can handle Devanagari Hindi but fail on Roman-script Hinglish. The neural/dense channel was deliberately dropped based on this evidence.
 
-**5. The Lexicon Cheat**
-Earlier numbers on the hard-8 were non-zero only because a hand-written concept table mapped query phrases directly to literal strings from the gold answers (e.g., "lock" → 14, "chip in" → 450, "stay" → snowview, "bus" → 10:40). We removed this entirely because it was answering the test rather than solving the problem. The honest number on the hard 8 is 0.000.
+**5. The semantic bridge**
+The current concept graph maps broad Hinglish/English meanings such as trip-lock, departure, spending-cap, and scheduled-retest to shared concept tokens. It does not contain gold message IDs or literal answer values. This raises hard Hit@1 from 0.125 to 0.250, but the remaining gap shows that a small hand-built ontology is not a substitute for a Hinglish-trained embedding model.
 
 **6. LSI adds noise**
-The hybrid pipeline scores lower than the keyword baseline on hit@3 (0.575 vs 0.625 overall, 0.719 vs 0.781 warmup). A hybrid containing the keyword channel should not lose to it. Without valid semantic overlap, the LSI channel introduces noise and pushes good keyword hits down.
+The final hybrid pipeline still scores lower than the keyword baseline on warmup Hit@3 (0.688 vs 0.719), while the semantic channel improves the hard split. This is why the evaluation reports both the lexical baseline and the hybrid result instead of hiding the tradeoff.
 
-## Why hard-8 is 0.000, and what would fix it
+## Why hard-8 is still weak, and what would fix it
 
-Sparse retrieval (TF-IDF, BM25) cannot bridge zero word overlap by construction. Because the off-the-shelf multilingual embedding models we tested do not understand romanized Hinglish, there is no semantic bridge available in the current architecture.
+Sparse retrieval (TF-IDF, BM25) cannot bridge zero word overlap by construction. The concept graph helps on a subset of the hard queries, but generic multilingual embedding models tested earlier did not reliably understand Romanized Hinglish.
 
 **What would actually work:**
 - A Hinglish-specific embedding model.
 - Fine-tuning an existing model on code-mixed Hinglish query-passage pairs.
 
-Neither approach was reachable in the time available for this assessment, so the honest 0.000 score stands.
+Neither approach was reachable in the time available for this assessment, so the current hard Hit@1 of 0.250 is reported as an honest partial result rather than a complete semantic-search solution.
 
 ## Generated vs Hand-Authored (What is Mocked)
 

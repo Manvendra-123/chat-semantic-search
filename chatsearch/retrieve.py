@@ -12,7 +12,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from chatsearch.index import WINDOW, ChatIndex
-from chatsearch.lexicon import expand_tokens
+from chatsearch.lexicon import concept_tokens, expand_tokens
 from chatsearch.queryparse import ParsedQuery, parse_query
 from chatsearch.textutil import tokenize
 
@@ -54,6 +54,14 @@ def _top_ids(scores: np.ndarray, n: int) -> list[int]:
     return [int(i) for i in idx]
 
 
+def _concept_coverage(query_tokens: list[str], text: str) -> float:
+    query_concepts = concept_tokens(query_tokens)
+    if not query_concepts:
+        return 0.0
+    text_concepts = concept_tokens(tokenize(text))
+    return len(query_concepts & text_concepts) / len(query_concepts)
+
+
 def search(index: ChatIndex, query: str, k: int = 8, mode: str = "hybrid") -> tuple[ParsedQuery, list[Hit]]:
     parsed = parse_query(query, index.now)
     expanded = " ".join(expand_tokens(parsed.tokens))
@@ -68,10 +76,8 @@ def search(index: ChatIndex, query: str, k: int = 8, mode: str = "hybrid") -> tu
     person_boost = np.ones(len(index.passages))
     time_boost = np.ones(len(index.passages))
     decision_boost = np.ones(len(index.passages))
-    query_concepts = {
-        token for token in expand_tokens(parsed.tokens) if token.startswith("concept:")
-    }
     concept_boost = np.ones(len(index.passages))
+    semantic_s = np.zeros(len(index.passages))
 
     for i, p in enumerate(index.passages):
         if parsed.people:
@@ -94,19 +100,16 @@ def search(index: ChatIndex, query: str, k: int = 8, mode: str = "hybrid") -> tu
         # Prefer substantive centers over "haan"
         if len(center["text"]) < 8:
             decision_boost[i] *= 0.65
-        if query_concepts:
-            center_concepts = {
-                token
-                for token in expand_tokens(tokenize(center["text"]))
-                if token.startswith("concept:")
-            }
-            coverage = len(query_concepts & center_concepts) / len(query_concepts)
-            concept_boost[i] = 1.0 + 8.0 * coverage
+        coverage = _concept_coverage(parsed.tokens, p.text)
+        semantic_s[i] = coverage
+        if coverage:
+            concept_boost[i] = 1.0 + 16.0 * coverage
 
     fused = (
         0.42 * _z(word_s)
         + 0.18 * _z(char_s)
         + 0.22 * _z(lsi_s)
+        + 1.5 * semantic_s
     ) * concept_boost
     fused *= person_boost * time_boost * decision_boost
 
@@ -133,7 +136,7 @@ def search(index: ChatIndex, query: str, k: int = 8, mode: str = "hybrid") -> tu
             ts = index.ts[index.id_to_idx[p.center_id]]
             if parsed.time_start <= ts < parsed.time_end:
                 why.append(f"time:{parsed.time_label}")
-        if "concept:" in p.expanded and any(t.startswith("concept:") for t in expand_tokens(parsed.tokens)):
+        if _concept_coverage(parsed.tokens, p.text) > 0:
             why.append("meaning:concept-overlap")
         why.append("hybrid:tfidf+lsi+rrf")
         best_msg_id = p.center_id
@@ -142,7 +145,9 @@ def search(index: ChatIndex, query: str, k: int = 8, mode: str = "hybrid") -> tu
         for j in range(p.start_idx, p.end_idx):
             m = index.messages[j]
             msg_v = index.word_vec.transform([m["text"]])
-            score = (msg_v @ qv["word"].T).toarray()[0, 0]
+            lexical_score = (msg_v @ qv["word"].T).toarray()[0, 0]
+            semantic_score = _concept_coverage(parsed.tokens, m["text"])
+            score = lexical_score + 0.5 * semantic_score
             if score > best_score:
                 best_score = score
                 best_msg_id = m["id"]

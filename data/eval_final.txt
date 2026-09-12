@@ -1,0 +1,13 @@
+Final evaluation after explicit concept-semantic fusion
+
+Split      | Count | Keyword Hit@1 Hit@3 MRR | Hybrid Hit@1 Hit@3 MRR
+Overall 40 | 40    | 0.475 0.625 0.577 | 0.475 0.625 0.570
+Warmup 32  | 32    | 0.531 0.719 0.643 | 0.531 0.688 0.626
+Hard 8     | 8     | 0.250 0.250 0.313 | 0.250 0.375 0.344
+
+Hybrid per-shape Hit@1 / MRR:
+Meaning | 20 | 0.600 / 0.7017
+Person  | 10 | 0.500 / 0.5750
+Time    | 10 | 0.200 / 0.3000
+
+The hard queries are validated as zero word overlap in data/queries.json.

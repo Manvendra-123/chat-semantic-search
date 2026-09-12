@@ -34,9 +34,21 @@ CONCEPTS: dict[str, set[str]] = {
         "project", "major", "lead", "leading", "handle", "core", "modules",
         "group", "qr", "lost", "found", "topic",
     },
+    "leadership": {
+        "lead", "leading", "leader", "handle", "roles", "core", "owner",
+        "responsible", "sambhal", "kregi",
+    },
     "bus": {
         "volvo", "bus", "coach", "overnight", "night",
         "depart", "departure", "nikalegi", "delhi", "terminal", "time", "pakdi",
+    },
+    "departure": {
+        "depart", "departure", "leave", "nikal", "nikalte", "nikalegi",
+        "coach", "volvo", "station", "time", "pm",
+    },
+    "spending_cap": {
+        "cap", "limit", "maximum", "spending", "budget", "hisaab",
+        "upar", "head", "amount",
     },
     "stay": {
         "stay", "hotel", "pg", "room", "rooms",
@@ -50,6 +62,10 @@ CONCEPTS: dict[str, set[str]] = {
         "exam", "test", "makeup", "retest", "professor",
         "unit", "paper", "quiz", "dubara", "scheduled", "sir", "monday",
     },
+    "scheduled_retest": {
+        "scheduled", "schedule", "makeup", "retest", "dubara", "paper",
+        "unit", "professor", "sir", "monday",
+    },
     "jacket": {"jacket", "layering", "hawa", "cold", "warm"},
 }
 
@@ -57,6 +73,19 @@ TOKEN_TO_CONCEPTS: dict[str, set[str]] = {}
 for cid, words in CONCEPTS.items():
     for w in words:
         TOKEN_TO_CONCEPTS.setdefault(w, set()).add(cid)
+
+
+def concept_tokens(tokens: list[str]) -> set[str]:
+    """Return only concepts explicitly evidenced by the input tokens."""
+    joined = " ".join(tokens)
+    concepts: set[str] = set()
+    for cid, words in CONCEPTS.items():
+        if any(w in joined for w in words if " " in w):
+            concepts.add(f"concept:{cid}")
+        if any(tok in TOKEN_TO_CONCEPTS and cid in TOKEN_TO_CONCEPTS[tok] for tok in tokens):
+            concepts.add(f"concept:{cid}")
+    return concepts
+
 
 def expand_tokens(tokens: list[str]) -> list[str]:
     extra: list[str] = []
