@@ -69,6 +69,10 @@ def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[
     person_boost = np.ones(len(index.passages))
     time_boost = np.ones(len(index.passages))
     decision_boost = np.ones(len(index.passages))
+    query_concepts = {
+        token for token in expand_tokens(parsed.tokens) if token.startswith("concept:")
+    }
+    concept_boost = np.ones(len(index.passages))
 
     for i, p in enumerate(index.passages):
         if parsed.people:
@@ -91,16 +95,24 @@ def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[
         # Prefer substantive centers over "haan"
         if len(center["text"]) < 8:
             decision_boost[i] *= 0.65
+        if query_concepts:
+            center_concepts = {
+                token
+                for token in expand_tokens(tokenize(center["text"]))
+                if token.startswith("concept:")
+            }
+            coverage = len(query_concepts & center_concepts) / len(query_concepts)
+            concept_boost[i] = 1.0 + 8.0 * coverage
 
     fused = (
         0.42 * _z(word_s)
         + 0.18 * _z(char_s)
         + 0.22 * _z(lsi_s)
-    )
+    ) * concept_boost
     fused *= person_boost * time_boost * decision_boost
 
-    word_top = _top_ids(word_s * person_boost * time_boost, 80)
-    lsi_top = _top_ids(lsi_s * person_boost * time_boost, 80)
+    word_top = _top_ids(word_s * person_boost * time_boost * concept_boost, 80)
+    lsi_top = _top_ids(lsi_s * person_boost * time_boost * concept_boost, 80)
     fused_top = _top_ids(fused, 80)
     rrf = _rrf([word_top, lsi_top, fused_top])
     ranked = sorted(rrf, key=lambda pid: rrf[pid], reverse=True)

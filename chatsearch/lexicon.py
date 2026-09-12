@@ -13,6 +13,9 @@ CONCEPTS: dict[str, set[str]] = {
         "manali", "hill", "hills", "mountain", "mountains", "rohtang", "snow",
         "snowview", "mall", "himachal", "destination", "trip", "hills",
     },
+    "trip_lock": {
+        "hill station", "chalo", "nikalte", "14",
+    },
     "lock": {
         "lock", "locked", "fix", "fixed", "final", "finalized", "pakka",
         "decide", "decided", "decision", "confirm", "confirmed", "done",
