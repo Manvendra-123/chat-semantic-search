@@ -1,0 +1,743 @@
+{
+  "all_40": {
+    "n": 40,
+    "hit@1": 0.1,
+    "hit@5": 0.225,
+    "mrr@5": 0.1425
+  },
+  "hard_8": {
+    "n": 8,
+    "hit@1": 0.125,
+    "hit@5": 0.125,
+    "mrr@5": 0.125
+  },
+  "warmup_32": {
+    "n": 32,
+    "hit@1": 0.0938,
+    "hit@5": 0.25,
+    "mrr@5": 0.1469
+  },
+  "note": "Hit@1 is the number that matters. The gap between all-40 and hard-8 is the actual result of this project.",
+  "rows": [
+    {
+      "id": "H1",
+      "query": "When did we lock the hill station?",
+      "gold_id": 425,
+      "hard": true,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        3939,
+        3936,
+        2797,
+        2798,
+        326
+      ]
+    },
+    {
+      "id": "H2",
+      "query": "How much should each person chip in for the fest?",
+      "gold_id": 1134,
+      "hard": true,
+      "intent": "person",
+      "zero_overlap": true,
+      "hit@1": true,
+      "hit@5": true,
+      "rank": 1,
+      "top": [
+        1134,
+        1131,
+        1132,
+        1116,
+        1117
+      ]
+    },
+    {
+      "id": "H3",
+      "query": "Who is leading the major project group?",
+      "gold_id": 879,
+      "hard": true,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        3836,
+        655,
+        1168,
+        3188,
+        1866
+      ]
+    },
+    {
+      "id": "H4",
+      "query": "What time does the overnight coach depart?",
+      "gold_id": 638,
+      "hard": true,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        2321,
+        2318,
+        2315,
+        3934,
+        3933
+      ]
+    },
+    {
+      "id": "H5",
+      "query": "Did she cap the spending for everyone?",
+      "gold_id": 1146,
+      "hard": true,
+      "intent": "person",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        433,
+        431,
+        200,
+        430,
+        205
+      ]
+    },
+    {
+      "id": "H6",
+      "query": "What did we discuss last month about internships?",
+      "gold_id": 1597,
+      "hard": true,
+      "intent": "time",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        3477,
+        3334,
+        3480,
+        2047,
+        3475
+      ]
+    },
+    {
+      "id": "H7",
+      "query": "Where are we staying in the mountains?",
+      "gold_id": 565,
+      "hard": true,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        343,
+        392,
+        342,
+        394,
+        559
+      ]
+    },
+    {
+      "id": "H8",
+      "query": "Which professor scheduled the makeup test?",
+      "gold_id": 2018,
+      "hard": true,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        959,
+        442,
+        3983,
+        1278,
+        1395
+      ]
+    },
+    {
+      "id": "W01",
+      "query": "When did we decide on Manali?",
+      "gold_id": 425,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        1692,
+        237,
+        1387,
+        1386,
+        1385
+      ]
+    },
+    {
+      "id": "W02",
+      "query": "manali fix kab hua",
+      "gold_id": 425,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": true,
+      "rank": 3,
+      "top": [
+        296,
+        1387,
+        425,
+        1692,
+        423
+      ]
+    },
+    {
+      "id": "W03",
+      "query": "hotel manali me kitna rate tha",
+      "gold_id": 348,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        343,
+        342,
+        392,
+        394,
+        344
+      ]
+    },
+    {
+      "id": "W04",
+      "query": "Priya ne budget ke baare me kya bola pehle",
+      "gold_id": 284,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": true,
+      "rank": 3,
+      "top": [
+        205,
+        285,
+        284,
+        283,
+        1139
+      ]
+    },
+    {
+      "id": "W05",
+      "query": "project ka topic kab tak dena hai",
+      "gold_id": 472,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        179,
+        183,
+        181,
+        184,
+        180
+      ]
+    },
+    {
+      "id": "W06",
+      "query": "saturday ko lab hai kya",
+      "gold_id": 23,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        20,
+        19,
+        24,
+        22,
+        21
+      ]
+    },
+    {
+      "id": "W07",
+      "query": "exam date sheet kab aayi",
+      "gold_id": 254,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": true,
+      "hit@5": true,
+      "rank": 1,
+      "top": [
+        254,
+        252,
+        251,
+        256,
+        253
+      ]
+    },
+    {
+      "id": "W08",
+      "query": "Shukla sir attendance pe tight hain kya",
+      "gold_id": 35,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        163,
+        31,
+        29,
+        162,
+        27
+      ]
+    },
+    {
+      "id": "W09",
+      "query": "fest ka contribution kitna finalize hua",
+      "gold_id": 1134,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": true,
+      "rank": 3,
+      "top": [
+        1139,
+        1117,
+        1134,
+        1126,
+        1140
+      ]
+    },
+    {
+      "id": "W10",
+      "query": "What did Priya say about the fest money?",
+      "gold_id": 1134,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": true,
+      "rank": 2,
+      "top": [
+        1139,
+        1134,
+        1141,
+        1132,
+        1146
+      ]
+    },
+    {
+      "id": "W11",
+      "query": "sneha project lead hai kya",
+      "gold_id": 879,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        1816,
+        3583,
+        3745,
+        835,
+        1814
+      ]
+    },
+    {
+      "id": "W12",
+      "query": "volvo kitne baje nikalegi",
+      "gold_id": 638,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        2321,
+        2318,
+        3934,
+        2315,
+        3933
+      ]
+    },
+    {
+      "id": "W13",
+      "query": "snowview pg book hua kya",
+      "gold_id": 565,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        392,
+        394,
+        343,
+        395,
+        396
+      ]
+    },
+    {
+      "id": "W14",
+      "query": "makeup test kaun de raha hai",
+      "gold_id": 2018,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        105,
+        104,
+        959,
+        106,
+        3983
+      ]
+    },
+    {
+      "id": "W15",
+      "query": "TCS intern form last date kya thi",
+      "gold_id": 1597,
+      "hard": false,
+      "intent": "time",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        1460,
+        2980,
+        2946,
+        3818,
+        2094
+      ]
+    },
+    {
+      "id": "W16",
+      "query": "pichle mahine internship ki baat hui thi",
+      "gold_id": 1597,
+      "hard": false,
+      "intent": "time",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        3334,
+        2047,
+        2045,
+        2042,
+        2041
+      ]
+    },
+    {
+      "id": "W17",
+      "query": "Devansh ghar wale trip ke liye maan gaye kya",
+      "gold_id": 339,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        310,
+        308,
+        312,
+        307,
+        2182
+      ]
+    },
+    {
+      "id": "W18",
+      "query": "UPI id kisne bheji paise ke liye",
+      "gold_id": 567,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        433,
+        431,
+        209,
+        207,
+        430
+      ]
+    },
+    {
+      "id": "W19",
+      "query": "jacket leke jaana hai kya",
+      "gold_id": 504,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        278,
+        277,
+        280,
+        505,
+        284
+      ]
+    },
+    {
+      "id": "W20",
+      "query": "Ankit ne swimming ke baare me kya kaha",
+      "gold_id": 280,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        477,
+        692,
+        475,
+        195,
+        695
+      ]
+    },
+    {
+      "id": "W21",
+      "query": "goa kyun reject hua",
+      "gold_id": 269,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        2669,
+        2578,
+        1784,
+        1785,
+        2577
+      ]
+    },
+    {
+      "id": "W22",
+      "query": "internal marks kab aayenge",
+      "gold_id": 1358,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        1355,
+        1357,
+        1353,
+        1356,
+        1354
+      ]
+    },
+    {
+      "id": "W23",
+      "query": "Ishaan trip pe aa raha hai confirm",
+      "gold_id": 641,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        301,
+        2283,
+        413,
+        297,
+        2361
+      ]
+    },
+    {
+      "id": "W24",
+      "query": "hackathon register kab tak karna hai",
+      "gold_id": 1814,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        1353,
+        1357,
+        1355,
+        1356,
+        1358
+      ]
+    },
+    {
+      "id": "W25",
+      "query": "What did we discuss in July about internships?",
+      "gold_id": 1597,
+      "hard": false,
+      "intent": "time",
+      "zero_overlap": true,
+      "hit@1": true,
+      "hit@5": true,
+      "rank": 1,
+      "top": [
+        1597,
+        1681,
+        1684,
+        1601,
+        1677
+      ]
+    },
+    {
+      "id": "W26",
+      "query": "Kritika ne snow ke baare me kya bola",
+      "gold_id": 367,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        363,
+        2035,
+        927,
+        1024,
+        3739
+      ]
+    },
+    {
+      "id": "W27",
+      "query": "14 june ko nikalna hai na",
+      "gold_id": 425,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        1345,
+        1346,
+        1360,
+        1362,
+        1357
+      ]
+    },
+    {
+      "id": "W28",
+      "query": "Rohit ne tickets book kar li kya",
+      "gold_id": 433,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": true,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        112,
+        109,
+        398,
+        866,
+        560
+      ]
+    },
+    {
+      "id": "W29",
+      "query": "canteen lunch plan tha kis din",
+      "gold_id": 10,
+      "hard": false,
+      "intent": "time",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": true,
+      "rank": 5,
+      "top": [
+        13,
+        9,
+        8,
+        14,
+        10
+      ]
+    },
+    {
+      "id": "W30",
+      "query": "fest stall kaun sambhalega",
+      "gold_id": 1142,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        1138,
+        1139,
+        1134,
+        1140,
+        1146
+      ]
+    },
+    {
+      "id": "W31",
+      "query": "Priya ne 450 ke upar mat jaana bola tha?",
+      "gold_id": 1146,
+      "hard": false,
+      "intent": "person",
+      "zero_overlap": false,
+      "hit@1": true,
+      "hit@5": true,
+      "rank": 1,
+      "top": [
+        1146,
+        1139,
+        205,
+        1141,
+        1134
+      ]
+    },
+    {
+      "id": "W32",
+      "query": "DBMS assignment kab tak hai",
+      "gold_id": 58,
+      "hard": false,
+      "intent": "meaning",
+      "zero_overlap": false,
+      "hit@1": false,
+      "hit@5": false,
+      "rank": null,
+      "top": [
+        1358,
+        1360,
+        1359,
+        56,
+        1353
+      ]
+    }
+  ]
+}
