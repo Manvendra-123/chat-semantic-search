@@ -15,4 +15,5 @@ data/index.npz
 data/index_meta.json
 .cache/
 venv2/
+venv312/
 data/eval_results.json
