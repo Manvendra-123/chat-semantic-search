@@ -13,10 +13,32 @@ The supporting requirements are a synthetic 4,000+ message Hinglish corpus, real
 
 ## How to Run
 
+### Prerequisites
+
+- Git
+- Python 3.12 or newer
+
+Clone the repository and enter its directory:
+
+```bash
+git clone https://github.com/Manvendra-123/chat-semantic-search.git
+cd chat-semantic-search
+```
+
+### macOS/Linux
+
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+### Windows PowerShell
+
+```powershell
+py -3.12 -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
 
 The repository already includes the generated corpus under `data/`. To rebuild
@@ -27,10 +49,24 @@ PYTHONPATH=. python chatsearch/build_corpus.py
 PYTHONPATH=. python chatsearch/validate.py
 ```
 
+On Windows PowerShell, set the package path for the current terminal first:
+
+```powershell
+$env:PYTHONPATH = "."
+python chatsearch/build_corpus.py
+python chatsearch/validate.py
+```
+
 Run the evaluation:
 
 ```bash
 PYTHONPATH=. python chatsearch/eval.py
+```
+
+On Windows PowerShell:
+
+```powershell
+python chatsearch/eval.py
 ```
 
 Start the web server:
