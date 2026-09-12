@@ -14,3 +14,4 @@ build/
 data/index.npz
 data/index_meta.json
 .cache/
+venv2/
