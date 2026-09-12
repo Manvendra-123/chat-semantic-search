@@ -20,7 +20,7 @@ from sklearn.preprocessing import normalize as sk_normalize
 from chatsearch.lexicon import expand_tokens
 from chatsearch.textutil import tokenize
 
-WINDOW = 4  # messages on each side
+WINDOW = 4
 
 
 @dataclass
@@ -28,7 +28,7 @@ class Passage:
     pid: int
     center_id: int
     start_idx: int
-    end_idx: int  # exclusive
+    end_idx: int
     sender: str
     ts: str
     text: str
@@ -106,7 +106,6 @@ class ChatIndex:
         self.X_lsi = sk_normalize(self.svd.fit_transform(self.X_word))
         self.ts = [datetime.fromisoformat(m["ts"]) for m in messages]
         self.now = self.ts[-1]
-        # BM25-ish: use tfidf as a stand-in; extra ranking in retrieve.py
 
     def encode_query(self, expanded_text: str) -> dict:
         qw = self.word_vec.transform([expanded_text])

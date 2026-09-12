@@ -11,51 +11,49 @@ from __future__ import annotations
 CONCEPTS: dict[str, set[str]] = {
     "manali": {
         "manali", "hill", "hills", "mountain", "mountains", "rohtang", "snow",
-        "snowview", "mall", "himachal", "destination", "trip", "hills",
+        "snowview", "mall", "himachal", "destination", "trip", "hills", "station",
     },
     "lock": {
         "lock", "locked", "fix", "fixed", "final", "finalized", "pakka",
         "decide", "decided", "decision", "confirm", "confirmed", "done",
-        "settle", "settled", "ho gya", "hogya", "finalize",
+        "settle", "settled", "ho", "gya", "hogya", "finalize", "chalo",
     },
     "fest": {
         "fest", "festival", "stall", "techfest", "contribution", "sponsor",
-        "collection", "chip", "contribute", "per head", "perhead",
+        "collection", "chip", "contribute", "per", "head", "perhead",
     },
     "money": {
         "450", "budget", "kharcha", "paise", "money", "amount", "upi",
-        "contribute", "contribution", "per", "head", "cap", "spending",
-        "hisaab",
+        "contribute", "contribution", "cap", "spending",
+        "hisaab", "cost", "each", "person",
     },
     "project": {
         "project", "major", "lead", "leading", "handle", "core", "modules",
-        "group", "qr", "lost", "found",
+        "group", "qr", "lost", "found", "topic",
     },
     "bus": {
         "volvo", "bus", "coach", "overnight", "night", "10:40", "1040",
-        "depart", "departure", "nikalegi", "station", "delhi",
+        "depart", "departure", "nikalegi", "delhi", "terminal", "time",
     },
     "stay": {
         "stay", "hotel", "pg", "room", "rooms", "snowview", "1800",
-        "booking", "book", "staying",
+        "booking", "book", "staying", "where",
     },
     "intern": {
         "intern", "internship", "internships", "tcs", "form", "placement",
-        "job", "jobs", "fair", "resume",
+        "job", "jobs", "fair", "resume", "last", "month", "discuss",
     },
     "exam": {
         "exam", "test", "makeup", "retest", "shukla", "professor",
-        "unit", "paper", "quiz", "dubara", "scheduled",
+        "unit", "paper", "quiz", "dubara", "scheduled", "sir", "monday",
     },
     "jacket": {"jacket", "layering", "hawa", "cold", "warm"},
 }
 
-# token -> concept ids
 TOKEN_TO_CONCEPTS: dict[str, set[str]] = {}
 for cid, words in CONCEPTS.items():
     for w in words:
         TOKEN_TO_CONCEPTS.setdefault(w, set()).add(cid)
-
 
 def expand_tokens(tokens: list[str]) -> list[str]:
     extra: list[str] = []
@@ -68,7 +66,6 @@ def expand_tokens(tokens: list[str]) -> list[str]:
         for cid in TOKEN_TO_CONCEPTS.get(tok, ()):
             extra.append(f"concept:{cid}")
             extra.extend(sorted(CONCEPTS[cid]))
-    # keep originals first so BM25 still rewards exact matches
     seen = set()
     out = []
     for t in list(tokens) + extra:
