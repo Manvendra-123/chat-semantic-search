@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const resultsContainer = document.getElementById('resultsContainer');
   const loadingIndicator = document.getElementById('loadingIndicator');
   const examplesContainer = document.getElementById('examplesContainer');
-  const evaluationStrip = document.getElementById('evaluationStrip');
-  const evaluationMetrics = document.getElementById('evaluationMetrics');
 
   // Load Meta & Examples
   try {
@@ -22,20 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         examplesContainer.appendChild(tag);
       });
-    }
-    if (metaData.eval) {
-      const metrics = [
-        ['All 40', metaData.eval.all_40],
-        ['Hard 8', metaData.eval.hard_8],
-        ['Warm-up 32', metaData.eval.warmup_32],
-      ];
-      metrics.forEach(([label, result]) => {
-        const metric = document.createElement('div');
-        metric.className = 'evaluation-metric';
-        metric.innerHTML = `<strong>${label}</strong><span>Hit@1 ${Math.round(result['hit@1'] * 100)}% · Hit@5 ${Math.round(result['hit@5'] * 100)}%</span>`;
-        evaluationMetrics.appendChild(metric);
-      });
-      evaluationStrip.hidden = false;
     }
   } catch (e) {
     console.error('Failed to load metadata', e);
