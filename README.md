@@ -2,6 +2,15 @@
 
 This repository contains a submission for the IT Geeks assessment (Problem #2 "Search a Group Chat Properly"). The brief requires searching a synthetic Hinglish group chat (4,000+ messages, 8 participants, 6 months) and retrieving the correct message for 40 queries, including 8 queries with zero word overlap with the answer.
 
+## Requirements First
+
+The project is built around two requirements:
+
+1. **Zero-word semantic retrieval:** find the right message even when the query and answer share no words. This is the central requirement; the rest is supporting infrastructure.
+2. **Three archive-question shapes:** support meaning questions such as "When did we decide on the trip?", person questions such as "What did Priya say about the budget?", and time questions such as "What did we discuss last month?". These shapes use different ranking signals because one retrieval strategy does not serve them equally well.
+
+The supporting requirements are a synthetic 4,000+ message Hinglish corpus, realistic conversation context, eight participants across six months, 40 labeled queries, eight zero-overlap hard queries, and separate reporting for the full set and hard set.
+
 ## The Honest Result
 
 The stated result of this project is the gap between the warmup queries (where keyword overlap exists) and the hard 8 queries (zero word overlap). The pipeline combines TF-IDF word and character n-grams, LSI, and an inspectable Hinglish concept graph over conversation windows. The concept graph supplies a small semantic bridge for code-mixed phrases without pretending that a generic embedding understands Romanized Hinglish.
