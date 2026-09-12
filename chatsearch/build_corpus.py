@@ -25,6 +25,43 @@ def parse_ts(value: str) -> datetime:
     return datetime.fromisoformat(value)
 
 
+# Warmup gold texts: must appear exactly once in the corpus so
+# text_to_msg lookup is unambiguous.
+WARMUP_GOLDS = {
+    "lab assistant ne mana kar diya sports complex raat ko",
+    "aaj lab me bhookh lagi h",
+    "yo guys, os class h aaj?",
+    "keys mil gaya kya maths?",
+    "junior ne bola stairs raat ko",
+    "rishikesh sasta h thoda",
+    "start karna h kal tak",
+    "physics ka practical download karna h",
+    "HOD pucha stairs shaam ko",
+    "mera charger gym me reh gaya",
+    "senior ne bola library 2 baje",
+    "file kisi ke pass h network?",
+    "placement cell bataya department shaam ko",
+    "raat ko milte h sports complex pe",
+    "guard postpone kiya auditorium subah",
+    "cn ka file complete karna h",
+    "physics ka practical start karna h",
+    "night guys, chemistry class h aaj?",
+    "dean bahut chhota h yaar",
+    "lunch kon kon aa rha canteen",
+    "senior aayega lab dopahar me",
+    "abhi milte h library pe",
+    "placement cell bheja h lab friday",
+    "aaj milte h lab pe",
+    "wo group me sirf dekhta h",
+    "maths ka phone print nikalna h",
+    "bhaiya ne mana kar diya mess 2 baje",
+    "mera phone canteen me reh gaya",
+    "ye koi vote nhi h",
+    "yeh physics kitna mast h",
+    "shaam ko milte h gym pe",
+}
+
+
 class CorpusBuilder:
     def __init__(self, seed: str = SEED) -> None:
         self.rng = random.Random(seed)
@@ -32,7 +69,7 @@ class CorpusBuilder:
         self.tags: dict[str, int] = {}
         self._id = 0
         self._clock = datetime(2025, 2, 1, 9, 0, tzinfo=IST)
-        self.seen_substantive = set()
+        self.emitted_golds: set[str] = set()
 
     def load_seed(self) -> None:
         for name in ("raw_1.jsonl", "raw_2.jsonl"):
@@ -94,53 +131,15 @@ class CorpusBuilder:
                 kind, body = "forwarded", text[6:].strip()
             self.emit(sender, body, kind=kind, tag=tag_on.get(i), minutes=self.rng.choice([1, 1, 2, 3, 12]))
 
-    WORDS = {
-        "subject": ["warden", "placement cell", "senior", "junior", "guard", "HOD", "bhaiya", "dost", "admin", "dean", "CR", "lab assistant"],
-        "verb": ["ne bola", "ne mana kar diya", "cancel kar diya", "postpone kiya", "bheja h", "check kar raha", "aayega", "pucha", "bataya", "announce kiya", "daant lagayi"],
-        "place": ["canteen", "library", "hostel", "lab", "auditorium", "ground", "gym", "mess", "main gate", "department", "parking", "sports complex", "common room", "stairs"],
-        "time_hint": ["kal", "aaj", "shaam ko", "subah", "2 baje", "next week", "abhi", "raat ko", "tuesday", "friday", "weekend pe", "dopahar me"],
-        "noun": ["notes", "pdf", "file", "record", "assignment", "practical", "laptop", "charger", "bag", "id card", "keys", "wallet", "phone", "bottle", "copy", "pen", "register", "printout"],
-        "question": ["kisi ke pass h", "kisko chahiye", "kahan h", "kab tak dena h", "kaun laya h", "dekha kya kisi ne", "mil gaya kya", "submit kiya kya", "ban gaya tera"],
-        "greeting": ["good morning", "gn", "hello", "hi", "namaste", "yo", "sup", "morning", "night", "hey"],
-        "topic": ["dbms", "os", "cn", "dsa", "maths", "physics", "chemistry", "compiler", "network", "cloud"],
-        "reaction": ["lol", "lmao", "sad", "oof", "damn", "nice", "ok", "hmm", "haan", "nhi", "true", "same", "bet", "+1", "achha", "sahi"],
-        "action": ["padhna h", "submit karna h", "print nikalna h", "xerox karna h", "download karna h", "mail karna h", "complete karna h", "start karna h"],
-        "complaint": ["too much syllabus", "network down h", "light nahi h", "barish ho rahi h", "garmi bahot h", "thak gaya", "nind aa rahi", "bhookh lagi h", "sir dard h"],
-        "random_adj": ["bekar", "mast", "heavy", "easy", "hard", "lamba", "chhota", "boring", "interesting", "faaltu", "lame", "awesome"]
-    }
-
-    TEMPLATES = [
-        "{subject} {verb} {place} {time_hint}",
-        "{noun} {question} {topic}?",
-        "{greeting} guys, {topic} class h aaj?",
-        "mera {noun} {place} me reh gaya",
-        "aaj {place} me {complaint}",
-        "{topic} ka {noun} {action}",
-        "yeh {topic} kitna {random_adj} h",
-        "{reaction}",
-        "koi {place} chal raha h?",
-        "{time_hint} milte h {place} pe",
-        "{subject} bahut {random_adj} h yaar",
-        "{action} {time_hint} tak",
-        "kisi ne {topic} {action} kya",
-    ]
-
     def get_filler_text(self) -> str:
-        while True:
-            template = self.rng.choice(self.TEMPLATES)
-            text = template
-            while "{" in text:
-                start = text.find("{")
-                end = text.find("}")
-                key = text[start+1:end]
-                val = self.rng.choice(self.WORDS[key])
-                text = text[:start] + val + text[end+1:]
-
-            if len(text) > 12:
-                if text in self.seen_substantive:
-                    continue
-                self.seen_substantive.add(text)
-            return text
+        from bank import BANK
+        for _ in range(20):  # retry to avoid warmup gold duplicates
+            text = self.rng.choice(BANK)
+            if text not in WARMUP_GOLDS or text not in self.emitted_golds:
+                if text in WARMUP_GOLDS:
+                    self.emitted_golds.add(text)
+                return text
+        return self.rng.choice(BANK)  # fallback
 
     def chatter(self, n: int) -> None:
         for _ in range(n):
@@ -665,21 +664,58 @@ def generate() -> tuple[list[dict], list[dict]]:
 
     id_to_msg = {m["id"]: m for m in b.messages}
     queries = build_queries(b.tags, id_to_msg)
-    import random
-    template_msgs = [m for m in b.messages if len(m["text"].split()) >= 4 and m["text"] != "<media>" and "id" in m and not any(q["gold_id"] == m["id"] for q in queries)]
-    random.seed(42)
-    selected = random.sample(template_msgs, 32)
 
-    for i in range(32):
-        msg = selected[i]
+    # Warmup queries (Hand-authored realistic search intent)
+    WARMUP = [
+        ("sports complex me raat ko kisne mana kiya tha?", "lab assistant ne mana kar diya sports complex raat ko", "person"),
+        ("kisko lab me bhookh lag rahi thi?", "aaj lab me bhookh lagi h", "meaning"),
+        ("os class ke baare me kya pucha tha", "yo guys, os class h aaj?", "meaning"),
+        ("maths ki keys mil gayi kya", "keys mil gaya kya maths?", "meaning"),
+        ("raat ko stairs ke liye junior ne kya kaha", "junior ne bola stairs raat ko", "person"),
+        ("boys team me kon kon the", "to boys side: mai ankit aman ishaan?", "person"),
+        ("rishikesh sasta tha ya mehenga", "rishikesh sasta h thoda", "meaning"),
+        ("kab tak start karne ko bola tha", "start karna h kal tak", "time"),
+        ("physics practical ka kya karna tha", "physics ka practical download karna h", "meaning"),
+        ("HOD ne shaam ko stairs pe kya pucha", "HOD pucha stairs shaam ko", "person"),
+        ("gym me kiska charger chhoot gaya tha", "mera charger gym me reh gaya", "person"),
+        ("senior ne library aane ka time kya diya", "senior ne bola library 2 baje", "time"),
+        ("network file ke liye pucha kiske paas h", "file kisi ke pass h network?", "meaning"),
+        ("department me placement cell ne kis time bulaya", "placement cell bataya department shaam ko", "time"),
+        ("raat ko sports complex chalne ka plan", "raat ko milte h sports complex pe", "time"),
+        ("auditorium ka postpone kisne kiya tha subah", "guard postpone kiya auditorium subah", "person"),
+        ("cn file complete karni thi uske baare me", "cn ka file complete karna h", "meaning"),
+        ("physics ka kya start karna hai", "physics ka practical start karna h", "meaning"),
+        ("chemistry class ke liye kisne bola tha raat ko", "night guys, chemistry class h aaj?", "meaning"),
+        ("dean ko chhota kisne bola", "dean bahut chhota h yaar", "person"),
+        ("lunch ke liye canteen kon aa raha hai", "lunch kon kon aa rha canteen", "meaning"),
+        ("lab dopahar me senior aayega ye kab bola tha", "senior aayega lab dopahar me", "person"),
+        ("abhi library milne ka kya time hua tha", "abhi milte h library pe", "time"),
+        ("placement cell ne kya bheja hai friday lab ke liye", "placement cell bheja h lab friday", "time"),
+        ("lab pe aaj aane ka plan kab banaya", "aaj milte h lab pe", "time"),
+        ("group me kon sirf dekhta hai", "wo group me sirf dekhta h", "meaning"),
+        ("maths ka print kya nikalna hai phone ka", "maths ka phone print nikalna h", "meaning"),
+        ("bhaiya ne mess 2 baje se kyun mana kiya", "bhaiya ne mana kar diya mess 2 baje", "time"),
+        ("phone canteen me kiska reh gaya tha", "mera phone canteen me reh gaya", "meaning"),
+        ("vote nahi h ye kab bola tha", "ye koi vote nhi h", "meaning"),
+        ("physics mast hai ye baat thi", "yeh physics kitna mast h", "meaning"),
+        ("gym shaam ko aane ke liye bola", "shaam ko milte h gym pe", "time")
+    ]
+    
+    text_to_msg = {m["text"]: m for m in b.messages}
+    
+    for i, (q_text, expected_text, intent) in enumerate(WARMUP):
+        msg = text_to_msg.get(expected_text)
+        if not msg:
+            print(f"WARNING: WARMUP MSG NOT FOUND: {expected_text}")
+            continue
         queries.append({
             "id": f"W{i+1:02d}",
-            "query": msg["text"],
+            "query": q_text,
             "gold_id": msg["id"],
             "gold_sender": msg["sender"],
             "gold_ts": msg["ts"],
             "gold_text": msg["text"],
-            "intent": "meaning",
+            "intent": intent,
             "hard": False,
             "zero_overlap": False
         })

@@ -101,6 +101,10 @@ class ChatIndex:
         )
         self.X_word = self.word_vec.fit_transform(corpus)
         self.X_char = self.char_vec.fit_transform(corpus)
+
+        # Dense embeddings removed
+
+        print("Running LSI...")
         n_comp = min(128, max(16, self.X_word.shape[0] // 40))
         self.svd = TruncatedSVD(n_components=n_comp, random_state=7)
         self.X_lsi = sk_normalize(self.svd.fit_transform(self.X_word))

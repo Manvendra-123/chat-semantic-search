@@ -54,7 +54,7 @@ def _top_ids(scores: np.ndarray, n: int) -> list[int]:
     return [int(i) for i in idx]
 
 
-def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[Hit]]:
+def search(index: ChatIndex, query: str, k: int = 8, mode: str = "hybrid") -> tuple[ParsedQuery, list[Hit]]:
     parsed = parse_query(query, index.now)
     expanded = " ".join(expand_tokens(parsed.tokens))
     qv = index.encode_query(expanded)
@@ -113,16 +113,19 @@ def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[
     word_top = _top_ids(word_s * person_boost * time_boost * concept_boost, 80)
     lsi_top = _top_ids(lsi_s * person_boost * time_boost * concept_boost, 80)
     fused_top = _top_ids(fused, 80)
-    rrf = _rrf([word_top, lsi_top, fused_top])
-    ranked = _top_ids(fused, len(fused))
+    
+    if mode == "keyword":
+        kw_fused = 0.7 * _z(word_s) + 0.3 * _z(char_s)
+        scores = kw_fused
+        ranked = _top_ids(kw_fused, len(kw_fused))
+    else:
+        scores = fused
+        ranked = _top_ids(fused, len(fused))
 
     hits: list[Hit] = []
-    seen_centers: set[int] = set()
+    seen_message_ids: set[int] = set()
     for pid in ranked:
         p = index.passages[pid]
-        if p.center_id in seen_centers:
-            continue
-        seen_centers.add(p.center_id)
         why = []
         if parsed.people and p.sender in parsed.people:
             why.append(f"person:{p.sender}")
@@ -144,6 +147,10 @@ def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[
                 best_score = score
                 best_msg_id = m["id"]
 
+        if best_msg_id in seen_message_ids:
+            continue
+        seen_message_ids.add(best_msg_id)
+
         ctx = []
         for j in range(p.start_idx, p.end_idx):
             m = index.messages[j]
@@ -161,7 +168,7 @@ def search(index: ChatIndex, query: str, k: int = 8) -> tuple[ParsedQuery, list[
         hits.append(
             Hit(
                 message_id=best_msg_id,
-                score=float(rrf[pid]),
+                score=float(scores[pid]),
                 sender=best_msg["sender"],
                 ts=best_msg["ts"],
                 text=best_msg["text"],
