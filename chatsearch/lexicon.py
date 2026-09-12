@@ -11,10 +11,10 @@ from __future__ import annotations
 CONCEPTS: dict[str, set[str]] = {
     "manali": {
         "manali", "hill", "hills", "mountain", "mountains", "rohtang", "snow",
-        "snowview", "mall", "himachal", "destination", "trip", "hills", "station",
+        "snowview", "mall", "himachal", "destination", "trip", "station",
     },
     "trip_lock": {
-        "hill station", "chalo", "nikalte", "14",
+        "hill station", "chalo", "nikalte",
     },
     "lock": {
         "lock", "locked", "fix", "fixed", "final", "finalized", "pakka",
@@ -26,20 +26,20 @@ CONCEPTS: dict[str, set[str]] = {
         "collection", "chip", "contribute", "per", "head", "perhead",
     },
     "money": {
-        "450", "budget", "kharcha", "paise", "money", "amount", "upi",
+        "budget", "kharcha", "paise", "money", "amount", "upi",
         "contribute", "contribution", "cap", "spending",
-        "hisaab", "cost", "each", "person",
+        "hisaab", "cost", "each", "person", "limit",
     },
     "project": {
         "project", "major", "lead", "leading", "handle", "core", "modules",
         "group", "qr", "lost", "found", "topic",
     },
     "bus": {
-        "volvo", "bus", "coach", "overnight", "night", "10:40", "1040",
-        "depart", "departure", "nikalegi", "delhi", "terminal", "time",
+        "volvo", "bus", "coach", "overnight", "night",
+        "depart", "departure", "nikalegi", "delhi", "terminal", "time", "pakdi",
     },
     "stay": {
-        "stay", "hotel", "pg", "room", "rooms", "snowview", "1800",
+        "stay", "hotel", "pg", "room", "rooms",
         "booking", "book", "staying", "where",
     },
     "intern": {
@@ -47,7 +47,7 @@ CONCEPTS: dict[str, set[str]] = {
         "job", "jobs", "fair", "resume", "last", "month", "discuss",
     },
     "exam": {
-        "exam", "test", "makeup", "retest", "shukla", "professor",
+        "exam", "test", "makeup", "retest", "professor",
         "unit", "paper", "quiz", "dubara", "scheduled", "sir", "monday",
     },
     "jacket": {"jacket", "layering", "hawa", "cold", "warm"},
